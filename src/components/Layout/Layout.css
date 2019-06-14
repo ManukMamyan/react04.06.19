@@ -1,0 +1,13 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.Layout {
+    height: 200px;
+    background-color: antiquewhite;
+}
+
+.MainContent {
+    display: flex;
+}

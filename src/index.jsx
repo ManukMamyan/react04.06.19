@@ -1,17 +1,21 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDom from 'react-dom';
+
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import MessageField from './components/MessageField';
+import Layout from './components/Layout';
 
 class App extends Component {
     render() {
         return (
-            <div>
-                Hello World!!
-            </div>
+            <MuiThemeProvider>
+                <Layout />
+            </MuiThemeProvider>
         );
     }
 }
 
 ReactDom.render(
-    <App />,
+    <App/>,
     document.getElementById('root')
 );

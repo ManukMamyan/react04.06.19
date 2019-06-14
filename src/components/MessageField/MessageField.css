@@ -1,0 +1,12 @@
+.MessageField {
+    position: relative;
+    margin-left: 50px;
+    width: 750px;
+    background-image: url("/src/components/MessageField/images/gray.jpg") ;
+    height: 630px;
+}
+
+.inputField {
+    position: absolute;
+    bottom: 0;
+}
