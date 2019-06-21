@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Link} from 'react-router-dom';
 import './Profile.css';
 
 export default class Profile extends Component {

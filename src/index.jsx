@@ -1,15 +1,9 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import ReactDom from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import {BrowserRouter} from 'react-router-dom';
 
-<<<<<<< Updated upstream
-class App extends Component {
-    render() {
-        return (
-            <div>
-                Hello World!!
-            </div>
-=======
+import initStore from './utils/store';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import Router from './components/Router';
 
@@ -17,18 +11,18 @@ import Router from './components/Router';
 class App extends Component {
     render() {
         return (
-            <BrowserRouter>
-                <MuiThemeProvider>
-
-                    <Router/>
-                </MuiThemeProvider>
-            </BrowserRouter>
->>>>>>> Stashed changes
+            <Provider store={initStore([])}>
+                <BrowserRouter>
+                    <MuiThemeProvider>
+                        <Router/>
+                    </MuiThemeProvider>
+                </BrowserRouter>
+            </Provider>
         );
     }
 }
 
 ReactDom.render(
-    <App />,
+    <App/>,
     document.getElementById('root')
 );
