@@ -1,5 +1,6 @@
 import update from 'react-addons-update';
-import {CHAT_MANAGER} from '../actions/chatActions';
+import { SEND_MESSAGE } from '../actions/messageActions';
+import { UNHIGHLIGHT_CHAT, HIGHLIGHT_CHAT } from '../actions/chatActions';
 
 const initialStore = {
     chats: {
@@ -9,24 +10,33 @@ const initialStore = {
         4: {title: 'Чат Yii2 Framework', messageList: []},
         5: {title: 'Чат HTML5 CSS3', messageList: []},
     },
+    highlightedChat: undefined,
 };
 
 
-export default function messageReducer(store = initialStore, action) {
+export default function chatReducer(store = initialStore, action) {
     switch (action.type) {
-        case CHAT_MANAGER: {
+        case SEND_MESSAGE: {
             return update(store, {
-                chats: {
-                    $set: {
-                        ...store.chats,
-                        [action.chatId]: {
-                            ...store.chats[action.chatId],
+                chats: { $merge: { [action.chatId]: {
+                            title: store.chats[action.chatId].title,
                             messageList: [...store.chats[action.chatId].messageList, action.messageId]
-                        }
-                    }
-                },
+                        } } }
             });
         }
+
+        case HIGHLIGHT_CHAT: {
+            return update(store, {
+                highlightedChat: { $set: action.chatId },
+            });
+        }
+
+        case UNHIGHLIGHT_CHAT: {
+            return update(store, {
+                highlightedChat: { $set: undefined },
+            });
+        }
+
         default:
             return store;
     }
