@@ -1,80 +1,106 @@
-import React, {Component} from 'react';
+import React from 'react';
 import PropTypes from "prop-types";
+import { push } from 'react-router-redux';
+import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
-import {List, ListItem} from 'material-ui/List';
-import Subheader from 'material-ui/Subheader';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
-import {Link} from 'react-router-dom';
-import {bindActionCreators} from "redux";
+import FileFolder from 'material-ui/svg-icons/file/folder';
+import { bindActionCreators } from "redux";
 import connect from "react-redux/es/connect/connect";
+import { TextField, FloatingActionButton } from 'material-ui';
+import SendIcon from 'material-ui/svg-icons/content/send';
+import { sendChat } from "../../actions/chatActions";
 
-class ChatList extends Component {
 
+class ChatList extends React.Component {
     static propTypes = {
-        highlightedChat: PropTypes.number
+        push: PropTypes.func.isRequired,
+        sendChat: PropTypes.func.isRequired,
+        chats: PropTypes.object.isRequired,
+        highlightedChat: PropTypes.number,
     };
 
     static defaultProps = {
         highlightedChat: undefined,
     };
 
-    render() {
+    handleNavigate = (link) => {
+        this.props.push(link)
+    };
 
-        console.log(this.props);
+    state = {
+        input: ''
+    };
+
+    handleSendChat = () => {
+        const { input } = this.state;
+        const { chats } = this.props;
+
+        if (input.length > 0) {
+            const chatId = Object.keys(chats).length + 1;
+            this.props.sendChat(chatId, input, []);
+            this.setState({
+                input: '',
+            });
+        }
+    };
+
+    handleType = (e) => {
+        this.setState({ [e.target.name]: e.target.value });
+    };
+
+    handleKeyUp = (e) => {
+        if (e.keyCode === 13) {
+            this.handleSendChat();
+        }
+    };
+
+    render() {
+        const { chats, highlightedChat } = this.props;
+
+        const chatElements = Object.keys(chats).map((chId, index) => (
+            <ListItem
+                key={ index }
+                onClick={ () => this.handleNavigate("/chat/" + chId + "/") }
+                primaryText={ chats[chId].title }
+                leftAvatar={ <Avatar icon={<FileFolder />} /> }
+                style={{ backgroundColor: highlightedChat === +chId ? 'purple' : '' }}
+            />));
 
         return (
-            <List>
-                <Subheader>Chat List</Subheader>
-                <Link to="/chat/1/">
-                    <ListItem
-                        primaryText="ReactJS"
-                        leftAvatar={<Avatar src="/src/components/ChatList/images/React.png"/>}
-                        rightIcon={<CommunicationChatBubble/>}
-                        style={{backgroundColor: this.props.highlightedChat === 1 ? 'red' : ''}}
+            <div>
+                <List>
+                    <ListItem onClick={ () => this.handleNavigate("/profile/") } primaryText="Профиль" leftAvatar={<Avatar icon={<FileFolder />} />} />
+                    <hr/>
+                    { chatElements }
+                </List>
+                <div className="input-field">
+                    <TextField
+                        name="input"
+                        value={ this.state.input }
+                        onChange={ this.handleType }
+                        onKeyUp={ this.handleKeyUp }
+                        hintText="Напишите сообщение"
                     />
-                </Link>
-                <Link to="/chat/2/">
-                    <ListItem
-                        primaryText="AngularJS"
-                        leftAvatar={<Avatar src="/src/components/ChatList/images/angular.png"/>}
-                        rightIcon={<CommunicationChatBubble/>}
-                        style={{backgroundColor: this.props.highlightedChat === 2 ? 'red' : ''}}
-                    />
-                </Link>
-                <Link to="/chat/3/">
-                    <ListItem
-                        primaryText="VueJS"
-                        leftAvatar={<Avatar src="/src/components/ChatList/images/Vue.png"/>}
-                        rightIcon={<CommunicationChatBubble/>}
-                        style={{backgroundColor: this.props.highlightedChat === 3 ? 'red' : ''}}
-                    />
-                </Link>
-                <Link to="/chat/4/">
-                    <ListItem
-                        primaryText="Yii2 Framework"
-                        leftAvatar={<Avatar src="/src/components/ChatList/images/yii.png"/>}
-                        rightIcon={<CommunicationChatBubble/>}
-                        style={{backgroundColor: this.props.highlightedChat === 4 ? 'red' : ''}}
-                    />
-                </Link>
-                <Link to="/chat/5/">
-                    <ListItem
-                        primaryText="HTML5CSS3"
-                        leftAvatar={<Avatar src="/src/components/ChatList/images/html.jpg"/>}
-                        rightIcon={<CommunicationChatBubble/>}
-                        style={{backgroundColor: this.props.highlightedChat === 5 ? 'red' : ''}}
-                    />
-                </Link>
-            </List>
+                    <FloatingActionButton
+                        onClick={ this.handleSendChat }
+                        mini={ true }
+                        style={{
+                            verticalAlign: 'middle',
+                            marginLeft: '16px'
+                        }}>
+                        <SendIcon />
+                    </FloatingActionButton>
+                </div>
+            </div>
         )
     }
 }
 
-
-const mapStateToProps = ({chatReducer}) => ({
+const mapStateToProps = ({ chatReducer }) => ({
+    chats: chatReducer.chats,
     highlightedChat: chatReducer.highlightedChat,
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({}, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ push, sendChat }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);

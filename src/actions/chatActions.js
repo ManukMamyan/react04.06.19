@@ -11,3 +11,12 @@ export const highlightChat = (chatId) => ({
     chatId,
 });
 
+export const SEND_CHAT = '@@chat/SEND_CHAT';
+
+export const sendChat = (chatId, title, messageList) => ({
+    type: SEND_CHAT,
+    chatId,
+    title,
+    messageList,
+});
+

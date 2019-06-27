@@ -20,11 +20,11 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
-                    <BrowserRouter>
+                    <ConnectedRouter history={ history }>
                         <MuiThemeProvider>
                             <Router/>
                         </MuiThemeProvider>
-                    </BrowserRouter>
+                    </ConnectedRouter>
                 </PersistGate>
             </Provider>
         );

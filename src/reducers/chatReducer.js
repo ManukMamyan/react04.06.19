@@ -1,6 +1,6 @@
 import update from 'react-addons-update';
 import { SEND_MESSAGE } from '../actions/messageActions';
-import { UNHIGHLIGHT_CHAT, HIGHLIGHT_CHAT } from '../actions/chatActions';
+import { UNHIGHLIGHT_CHAT, HIGHLIGHT_CHAT, SEND_CHAT } from '../actions/chatActions';
 
 const initialStore = {
     chats: {
@@ -22,6 +22,15 @@ export default function chatReducer(store = initialStore, action) {
                             title: store.chats[action.chatId].title,
                             messageList: [...store.chats[action.chatId].messageList, action.messageId]
                         } } }
+            });
+        }
+
+        case SEND_CHAT: {
+            return update(store, {
+                chats: { $set: { ...store.chats, [action.chatId]: {
+                            title: action.title,
+                            messageList: []
+                        } } },
             });
         }
 
