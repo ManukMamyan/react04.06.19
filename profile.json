@@ -1,0 +1,14 @@
+[
+  {
+    "id": 1,
+    "name": "Mamyan Manuk",
+    "email": "manuk@mail.ru",
+    "password_hash": " "
+  },
+  {
+    "id": 2,
+    "name": "Somebody",
+    "email": "somebody@mail.ru",
+    "password_hash": " "
+  }
+]

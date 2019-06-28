@@ -4,19 +4,22 @@ import { push } from 'react-router-redux';
 import { List, ListItem } from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
 import FileFolder from 'material-ui/svg-icons/file/folder';
+import CircularProgress from 'material-ui/CircularProgress'
 import { bindActionCreators } from "redux";
 import connect from "react-redux/es/connect/connect";
 import { TextField, FloatingActionButton } from 'material-ui';
 import SendIcon from 'material-ui/svg-icons/content/send';
-import { sendChat } from "../../actions/chatActions";
+import { sendChat, loadChats } from "../../actions/chatActions";
 
 
 class ChatList extends React.Component {
     static propTypes = {
         push: PropTypes.func.isRequired,
         sendChat: PropTypes.func.isRequired,
+        loadChats: PropTypes.func.isRequired,
         chats: PropTypes.object.isRequired,
         highlightedChat: PropTypes.number,
+        isLoading: PropTypes.bool.isRequired
     };
 
     static defaultProps = {
@@ -30,6 +33,10 @@ class ChatList extends React.Component {
     state = {
         input: ''
     };
+
+    componentDidMount() {
+        this.props.loadChats();
+    }
 
     handleSendChat = () => {
         const { input } = this.state;
@@ -55,22 +62,24 @@ class ChatList extends React.Component {
     };
 
     render() {
-        const { chats, highlightedChat } = this.props;
+        const { chats, highlightedChat, isLoading } = this.props;
+
+        if (isLoading) {
+            return <CircularProgress />
+        }
 
         const chatElements = Object.keys(chats).map((chId, index) => (
             <ListItem
                 key={ index }
-                onClick={ () => this.handleNavigate("/chat/" + chId + "/") }
+                onClick={ () => this.handleNavigate(`/chat/${chId}/`) }
                 primaryText={ chats[chId].title }
                 leftAvatar={ <Avatar icon={<FileFolder />} /> }
-                style={{ backgroundColor: highlightedChat === +chId ? 'purple' : '' }}
+                style={{ backgroundColor: highlightedChat === +chId ? 'red' : '' }}
             />));
 
         return (
             <div>
                 <List>
-                    <ListItem onClick={ () => this.handleNavigate("/profile/") } primaryText="Профиль" leftAvatar={<Avatar icon={<FileFolder />} />} />
-                    <hr/>
                     { chatElements }
                 </List>
                 <div className="input-field">
@@ -99,8 +108,9 @@ class ChatList extends React.Component {
 const mapStateToProps = ({ chatReducer }) => ({
     chats: chatReducer.chats,
     highlightedChat: chatReducer.highlightedChat,
+    isLoading: chatReducer.isLoading
 });
 
-const mapDispatchToProps = dispatch => bindActionCreators({ push, sendChat }, dispatch);
+const mapDispatchToProps = dispatch => bindActionCreators({ push, sendChat, loadChats }, dispatch);
 
 export default connect(mapStateToProps, mapDispatchToProps)(ChatList);
