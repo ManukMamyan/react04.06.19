@@ -3,7 +3,7 @@ import ReactDom from 'react-dom';
 import {Provider} from 'react-redux';
 import {BrowserRouter} from 'react-router-dom';
 
-import { ConnectedRouter, routerMiddleware } from 'react-router-redux';
+import {ConnectedRouter, routerMiddleware} from 'react-router-redux';
 import createHistory from 'history/createBrowserHistory';
 import {PersistGate} from 'redux-persist/integration/react';
 
@@ -20,13 +20,14 @@ class App extends Component {
         return (
             <Provider store={store}>
                 <PersistGate loading={null} persistor={persistor}>
-                    <ConnectedRouter history={ history }>
+                    <ConnectedRouter history={history}>
                         <MuiThemeProvider>
                             <Router/>
                         </MuiThemeProvider>
                     </ConnectedRouter>
                 </PersistGate>
             </Provider>
+
         );
     }
 }
